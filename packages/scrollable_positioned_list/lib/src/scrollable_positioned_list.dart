@@ -18,6 +18,9 @@ import 'scroll_offset_notifier.dart';
 /// Number of screens to scroll when scrolling a long distance.
 const int _screenScrollCount = 2;
 
+/// Page Storage identifier
+const String _pageStorageIdentifier = 'PageStorage.ItemPosition';
+
 /// A scrollable list of widgets similar to [ListView], except scroll control
 /// and position reporting is based on index rather than pixel offset.
 ///
@@ -327,7 +330,7 @@ class _ScrollablePositionedListState extends State<ScrollablePositionedList>
   @override
   void initState() {
     super.initState();
-    ItemPosition? initialPosition = PageStorage.of(context).readState(context);
+    ItemPosition? initialPosition = PageStorage.of(context).readState(context, identifier: _pageStorageIdentifier );
     primary.target = initialPosition?.index ?? widget.initialScrollIndex;
     primary.alignment =
         initialPosition?.itemLeadingEdge ?? widget.initialAlignment;
@@ -648,7 +651,9 @@ class _ScrollablePositionedListState extends State<ScrollablePositionedList>
           itemPositions.reduce((value, element) =>
               value.itemLeadingEdge < element.itemLeadingEdge
                   ? value
-                  : element));
+                  : element),
+          identifier: _pageStorageIdentifier
+                  );
     }
     widget.itemPositionsNotifier?.itemPositions.value = itemPositions;
   }
